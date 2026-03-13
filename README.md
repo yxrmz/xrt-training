@@ -235,4 +235,115 @@ You should now see **two curves** on the plot:
 
 The stronger magnetic field shifts the spectrum toward higher photon energies.
 
-![Bending magnet spectrum comparison](docs/images/f01_bm_compare.png)
+![Bending magnet spectrum comparison](docs/images/f1_bm_compare.png)
+
+
+## Undulator spectrum
+
+Now let us try a more challenging source and calculate the spectrum of an undulator.
+
+Open the script:
+
+```
+calc_undulator.py
+```
+
+Run it once to see the default result.
+
+Example using Pixi:
+
+```bash
+pixi run python calc_undulator.py
+```
+
+---
+
+### Extend the energy range
+
+To see more harmonics, extend the energy range.
+
+Find line 74 and change it to:
+
+```python
+energy = np.linspace(2000, 22000, 1001)
+```
+
+Run the script again.
+
+You should now see a wider spectrum containing more harmonic peaks.
+
+---
+
+### Use logarithmic scale on the y axis
+
+The first harmonic is much stronger than the others and dominates the plot.  
+To reveal the weaker higher harmonics, change the y axis to logarithmic scale.
+
+Add the following line before showing the plot:
+
+```python
+plt.yscale('log')
+```
+
+Run the script again.
+
+Now the low-intensity harmonics become visible instead of appearing absent on a linear scale.
+
+---
+
+### Expected result
+
+With the extended energy range and logarithmic y axis, the plot should show:
+
+- a very strong first harmonic
+- several weaker higher harmonics at higher photon energies
+
+This is a typical undulator spectrum structure.
+
+### Modify the undulator parameters
+
+Now let us see how the spectrum changes when we modify the deflection parameter `K` of our undulator.
+
+Clone the following block of code:
+
+```python
+source = rs.Undulator(**kwargs)
+I0, l1, l2, l3 = source.intensities_on_mesh(energy, theta, psi)
+
+flux_through_aperture(energy, theta, psi, I0)
+```
+
+Paste the copied block below the original one.
+
+Before the **second** line
+
+```python
+source = rs.Undulator(**kwargs)
+```
+
+add:
+
+```python
+kwargs['K'] = 1
+```
+
+Run the script again.
+
+The modified undulator parameter changes the spectrum. Increasing the magnetic field strength shifts the harmonic structure toward **lower photon energies**.
+
+![Undulator spectrum comparison](docs/images/f2_undulator_k.png)
+
+---
+
+### Explore further
+
+Now try changing other source parameters and observe how the spectrum responds.
+
+Examples:
+
+- change the undulator `period`
+- change the electron beam energy `eE`
+
+After each change, run the script again and compare the positions and relative strengths of the harmonics.
+
+These parameters strongly affect the photon energy of the emitted radiation.
