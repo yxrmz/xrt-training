@@ -402,3 +402,93 @@ Compute the absorption coefficient, calculate the transmission, and plot it on t
 After running the script, compare how the transmission of **diamond**, **beryllium**, and **copper** differs across the energy range.
 
 ![Material transmittivity](docs/images/f3_filters.png)
+
+## Compound materials
+
+So far we have compared **elemental materials**.  
+xrt can also work with **compound materials**.
+
+Add the following import near the top of the script:
+
+```python
+import xrt.backends.raycing.materials.compounds as rmcp
+```
+
+---
+
+### Add Boron Nitride
+
+Create a compound material:
+
+```python
+material = rmcp.BoronNitride()
+```
+
+Calculate its absorption coefficient and transmission in the same way as for the elemental materials:
+Run the script again.
+
+Compound materials often show absorption behavior that differs from pure elements because their effective attenuation depends on the combination of constituent atoms.
+
+# 6. Mirrors
+
+Calculating mirror reflectivity requires an additional important parameter — the **incidence angle**.
+
+Open the script:
+
+```
+calc_mirrors.py
+```
+
+Run the script to plot the reflectivity curve.
+
+Example using Pixi:
+
+```bash
+pixi run python calc_mirrors.py
+```
+
+---
+
+## Incidence angle
+
+Notice how the **grazing incidence angle** `theta` is defined in the script.
+
+The reflectivity of X-ray mirrors strongly depends on this angle.  
+Try changing the value of `theta` and run the script again.
+
+Observe how the reflectivity curve changes with the angle.
+
+---
+
+## Comparing mirror materials
+
+Now let us compare reflectivity for different mirror materials.
+
+Using the same approach as we did for filters, create two additional materials:
+
+- **Platinum**
+- **Silicon**
+
+Example:
+
+```python
+matPt = rme.Pt()
+matSi = rme.Si()
+```
+
+Compute the reflectivity curves for these materials and plot them together with the original one.
+
+Run the script again and compare the results.
+
+---
+
+## What to observe
+
+When comparing the materials, notice:
+
+- the **critical energy** where reflectivity drops rapidly
+- the presence of **absorption edges**
+
+Heavier elements (such as platinum) generally provide higher reflectivity at higher photon energies, while lighter materials have lower critical energies.
+
+![Mirror reflectivity](docs/images/f4_mirrors.png)
