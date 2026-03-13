@@ -492,3 +492,110 @@ When comparing the materials, notice:
 Heavier elements (such as platinum) generally provide higher reflectivity at higher photon energies, while lighter materials have lower critical energies.
 
 ![Mirror reflectivity](docs/images/f4_mirrors.png)
+
+# 7. Monochromatization
+
+To monochromatize hard X-rays we use **crystalline materials**, which exhibit sharp resonance peaks in their reflectivity spectrum.
+
+Open the script:
+
+```
+calc_crystal_rocking_curve.py
+```
+
+Run it.
+
+Example using Pixi:
+
+```bash
+pixi run python calc_crystal_rocking_curve.py
+```
+
+This script calculates the reflectivity curve of a **silicon crystal** and also the **rocking curve** (angular detuning curve) for a double-crystal system.
+
+---
+
+## What to notice in the script
+
+There are two important steps here.
+
+### Bragg angle
+
+The Bragg angle is identified with:
+
+```python
+crystal.get_Bragg_angle(E)
+```
+
+This gives the angle at which the crystal reflects X-rays of energy `E`.
+
+### Reflectivity amplitude
+
+The complex reflectivity amplitude is calculated with:
+
+```python
+crystal.get_amplitude()
+```
+
+This is the key quantity used to obtain crystal reflectivity.
+
+---
+
+## Angular range
+
+Also notice the factor multiplying `dtheta` on line 14.
+
+Although the plotted variable may look like a small angle range in radians, the actual range here is in **microradians**.
+
+This is typical for crystal optics: the angular acceptance is extremely narrow.
+
+---
+
+## What this script calculates
+
+In the current form, the script calculates the reflectivity curve at:
+
+- a **fixed photon energy**
+- a **limited angular range** around the Bragg angle
+
+This is exactly what is needed for a **rocking curve**.
+
+---
+
+## A natural next question
+
+Very often we want the opposite representation:
+
+- **fixed angle**
+- **varying photon energy**
+
+In other words, instead of scanning angle around the Bragg condition for one energy, we want to scan energy at a chosen angle and calculate the reflectivity spectrum.
+
+Conceptually, this is done by:
+
+1. defining an energy array
+2. choosing a fixed incidence angle
+3. for each energy, calculating the reflectivity amplitude at that angle
+4. plotting reflectivity versus energy
+
+This gives the **energy acceptance curve** of the crystal at the chosen angle.
+
+Such a spectrum is often more intuitive when thinking about monochromatization, because it directly shows which photon energies are reflected by the crystal.
+
+---
+
+## Suggested exercise
+
+Try modifying the script so that:
+
+- `theta` is kept fixed
+- `E` becomes an array
+- the reflectivity is calculated for each energy point
+
+Then plot reflectivity as a function of energy.
+
+This will show the spectral selectivity of the silicon crystal at a fixed angle.
+
+![Si111 rocking_curve](docs/images/f5_crystals.png)
+
+
