@@ -347,3 +347,58 @@ Examples:
 After each change, run the script again and compare the positions and relative strengths of the harmonics.
 
 These parameters strongly affect the photon energy of the emitted radiation.
+
+## Comparing different materials
+
+Now let us compare the transmission of different filter materials.
+
+First import a pre-defined elemental material.  
+Add the following import near the top of the script:
+
+```python
+import xrt.backends.raycing.materials.elemental as rme
+```
+
+---
+
+### Add a Beryllium filter
+
+Find the line that plots the diamond transmission:
+
+```python
+plt.semilogx(E, transm, label='Diamond')
+```
+
+Right after it, add the following lines:
+
+```python
+matBe = rme.Be()
+muBe = matBe.get_absorption_coefficient(E)
+transmBe = np.exp(-muBe * thickness * 0.1)
+plt.semilogx(E, transmBe, label='Be')
+plt.legend()
+```
+
+Run the script again.
+
+You should now see transmission curves for **diamond** and **beryllium** on the same plot.
+
+In general, **heavier materials absorb more strongly**, so their transmission decreases faster with energy.
+
+---
+
+### Try another material: Copper
+
+Using the same approach, try adding a **copper filter**.
+
+Hint:
+
+```python
+matCu = rme.Cu()
+```
+
+Compute the absorption coefficient, calculate the transmission, and plot it on the same graph.
+
+After running the script, compare how the transmission of **diamond**, **beryllium**, and **copper** differs across the energy range.
+
+![Material transmittivity](docs/images/f3_filters.png)
