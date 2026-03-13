@@ -719,3 +719,125 @@ Examples:
 Each of these parameters changes the spectrum delivered to the sample.
 
 ![Multielement](docs/images/f6_allinone.png)
+
+# 9. GUI: beamline setup and power visualization in xrtQook
+
+Now let us move from standalone scripts to the GUI workflow.
+
+Start **xrtQook** with:
+
+```bash
+pixi run xrtQook
+```
+
+---
+
+## Load a beamline template
+
+Open the beamline template:
+
+```
+xrt/examples/withRaycing/_QookBeamlines/1crystal.xml
+```
+
+This example contains a source, a crystal, and a screen.
+
+---
+
+## Adjust the crystal size
+
+The crystal may look very large in the 3D view because the default optical element size is **2 × 2 meters**.
+
+Let us change the limits to something more realistic:
+
+- **X limits**: ±5 cm
+- **Y limits**: ±5 cm
+
+To edit the crystal properties:
+
+- either double click the crystal in the **3D scene view**
+- or double click the green **Instance of** line in the object tree
+
+This opens the object properties editor.
+
+---
+
+## Broaden the source spectrum
+
+Now let us see what changes if we use a broader source spectrum.
+
+Open the **Bending Magnet** source properties and change:
+
+- `eMin` to **1000** eV
+- `eMax` to **30000** eV
+
+Press **Apply**.
+
+You may notice that only a single visible ray emerges from the crystal.  
+This is expected: only a very small fraction of the initial rays statistically fall into the narrow crystal reflectivity peak.
+
+---
+
+## Generate the Python script
+
+Now generate the Python script from the GUI.
+
+In the generated script, find the function call:
+
+```python
+run_ray_tracing(...)
+```
+
+and set the number of repeats to:
+
+```python
+repeats=100
+```
+
+Save the script and run the propagation.
+
+The longer we accumulate, the better we estimate:
+
+- the flux
+- the beam shape at the sample screen
+
+---
+
+## Visualize absorbed power on the crystal
+
+While the script is running, we can also evaluate the absorbed power on the crystal.
+
+Open the crystal properties and in the right panel change:
+
+```python
+showAbsorbed = True
+```
+
+This displays the absorbed distribution on the crystal surface.
+
+At first this shows essentially the absorbed **photon count**, which is close to the full incident spectrum.
+
+To display **absorbed power** instead, change:
+
+```python
+fluxKind = 'power'
+```
+
+Now the plot represents absorbed power rather than total photon flux.
+
+You can save this plot for later analysis.
+
+---
+
+## What to observe
+
+This example demonstrates several important points:
+
+- crystal reflection is highly selective in energy and angle
+- only a small fraction of broadband bending-magnet rays satisfy the Bragg condition
+- accumulating more repeats improves statistics
+- absorbed-power maps are useful for estimating heat load on optics
+
+This is one of the key advantages of the GUI workflow: it allows you to move quickly from beamline layout to physical intuition and then to a generated Python script for further refinement.
+
+![Power plot](docs/images/f7_absorbed_power.jpg)
