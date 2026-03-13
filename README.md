@@ -598,4 +598,124 @@ This will show the spectral selectivity of the silicon crystal at a fixed angle.
 
 ![Si111 rocking_curve](docs/images/f5_crystals.png)
 
+# 8. Putting it all together: spectrum at the sample
 
+Now let us combine several building blocks into one script and calculate a spectrum at the sample position.
+
+We will:
+
+- generate radiation from a **bending magnet source**
+- propagate it through a **diamond filter**
+- reflect it from a **silicon mirror**
+- calculate the flux in **0.1% bandwidth**
+
+We will use a broad source energy range from **2 to 12 keV**.
+
+Create a new Python file and paste the following code into it:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+# path to xrt:
+import os, sys; sys.path.append(os.path.join('..', '..', '..'))  # analysis:ignore
+import xrt.backends.raycing.sources as rs
+
+import xrt.backends.raycing.materials as rm
+import xrt.backends.raycing.materials.elemental as rme
+
+
+xPrimeMax, zPrimeMax = 1., 0.3  # mrad
+energy = np.linspace(2000, 12000, 601)
+theta = np.linspace(-1., 1., 3) * xPrimeMax * 1e-3
+psi = np.linspace(-1., 1., 51) * zPrimeMax * 1e-3
+kwargs = dict(eE=3, eI=0.1, B0=1.7, distE='BW',
+              xPrimeMax=xPrimeMax, zPrimeMax=zPrimeMax)
+
+source = rs.BendingMagnet(**kwargs)
+
+matDiamond = rm.Material('C', rho=3.52)
+thickness = 0.1  # mm
+
+stripe3 = rme.Si()
+thetaM = 4e-3
+
+def main():
+
+    dtheta, dpsi = theta[1] - theta[0], psi[1] - psi[0]
+    I0xrt = source.intensities_on_mesh(energy, theta, psi)[0]
+    flux_xrt = I0xrt.sum(axis=(1, 2)) * dtheta * dpsi
+    plt.plot(energy/1e3, flux_xrt, 'r', label='Source BM 1.7T')
+
+    mu = matDiamond.get_absorption_coefficient(energy)  # in cm^-1
+    transm = np.exp(-mu * thickness * 0.1)
+    plt.plot(energy/1e3, flux_xrt*transm, label='After Diamond Filter')
+
+    rs3, rp3 = stripe3.get_amplitude(energy, np.sin(thetaM))[0:2]
+    refl = abs(rs3)**2
+
+    plt.plot(energy/1e3, flux_xrt*transm*refl, label='After Silicon Mirror')
+    ax = plt.gca()
+    ax.set_xlabel(u'energy (keV)')
+    ax.set_ylabel(u'total flux through {0}×{1} µrad² (ph/s/0.1%bw)'.format(
+        2*xPrimeMax, 2*zPrimeMax))
+    plt.legend()
+    plt.show()
+
+if __name__ == '__main__':
+    main()
+```
+
+Run the script.
+
+Example using Pixi:
+
+```bash
+pixi run python your_script_name.py
+```
+
+---
+
+## What this script does
+
+This example combines three effects:
+
+### 1. Source spectrum
+
+The bending magnet source produces the initial spectrum over the full energy range.
+
+### 2. Filter absorption
+
+The diamond filter reduces the flux depending on photon energy.
+
+### 3. Mirror reflectivity
+
+The silicon mirror further modifies the spectrum through energy-dependent reflectivity at the chosen grazing angle.
+
+---
+
+## What to observe
+
+The plot should show three curves:
+
+- **Source BM 1.7T** — the original bending magnet spectrum
+- **After Diamond Filter** — the spectrum after transmission through the filter
+- **After Silicon Mirror** — the spectrum after both the filter and the mirror
+
+This is already a simple beamline model: source → filter → mirror → sample.
+
+---
+
+## Suggested exercises
+
+Try modifying the script and observe how the final spectrum changes.
+
+Examples:
+
+- change the bending magnet field `B0`
+- change the filter thickness
+- replace the silicon mirror with platinum
+- change the mirror grazing angle `thetaM`
+
+Each of these parameters changes the spectrum delivered to the sample.
+
+![Multielement](docs/images/f6_allinone.png)
