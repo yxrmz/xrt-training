@@ -186,3 +186,53 @@ pixi run python calc_bm.py
 
 After running the script, a plot window should appear showing the **bending magnet spectrum**.
 
+## Modifying the source parameters
+
+Next we will change the magnetic field of the bending magnet and compare the resulting spectrum with the original one.
+
+Clone the following block of code in the script:
+
+```python
+source = rs.BendingMagnet(**kwargs)
+I0xrt = source.intensities_on_mesh(energy, theta, psi)[0]
+print(I0xrt.shape, I0xrt.max())
+flux_xrt = I0xrt.sum(axis=(1, 2)) * dtheta * dpsi
+plt.plot(energy/1e3, flux_xrt, 'r', label='xrt', lw=5)
+```
+
+Paste the copied block below the original one.
+
+---
+
+### Modify the magnetic field
+
+Before the **cloned** block, add the following line:
+
+```python
+kwargs['B0'] = 2.4
+```
+
+Then modify the plotting line in the cloned block:
+
+```python
+plt.plot(energy/1e3, flux_xrt, 'b', label='B=2.4T', lw=5)
+```
+
+---
+
+### Run the script again
+
+Run the script once more:
+
+```bash
+pixi run python calc_bm.py
+```
+
+You should now see **two curves** on the plot:
+
+- **red** – original bending magnet spectrum  
+- **blue** – spectrum with magnetic field **B = 2.4 T**
+
+The stronger magnetic field shifts the spectrum toward higher photon energies.
+
+![Bending magnet spectrum comparison](docs/images/f01_bm_compare.png)
