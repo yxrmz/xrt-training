@@ -841,3 +841,68 @@ This example demonstrates several important points:
 This is one of the key advantages of the GUI workflow: it allows you to move quickly from beamline layout to physical intuition and then to a generated Python script for further refinement.
 
 ![Power plot](docs/images/f7_absorbed_power.jpg)
+
+## Load a more realistic beamline model
+
+Now let us open a real beamline model:
+
+```
+BioXAS_Main.xml
+```
+
+This beamline contains **14 components**.  
+Take a moment to explore the layout and identify the main optical elements and screens.
+
+---
+
+## Add surface roughness to the first mirror
+
+At first the beamline may look a little too ideal.  
+Let us introduce some realistic mirror imperfections.
+
+In the left panel, click the **Figure Error** icon and add:
+
+```
+RandomRoughness
+```
+
+Then double click the new instance to open its properties.
+
+Increase:
+
+- the **correlation length**
+- the **rms** roughness
+
+At this point we can define the **surface roughness rms**.  
+Support for direct **slope RMS** definition will follow in future versions.
+
+---
+
+## Assign the roughness to the mirror
+
+Now navigate to the first mirror and open its properties.
+
+Find the property:
+
+```python
+figureError
+```
+
+and assign the newly created **RandomRoughness** object to it.
+
+Apply the changes.
+
+---
+
+## Observe the effect at the sample
+
+Now look at the image on the sample screen.
+
+Compare it with the ideal case.
+
+You should see that adding surface roughness degrades the beam quality.  
+Depending on the roughness parameters, the image may become broader, less sharp, or develop additional structure.
+
+This illustrates an important point: even small mirror figure errors can noticeably affect the final beam delivered to the sample.
+
+![Roughness](docs/images/f8_figure_error.jpg)
