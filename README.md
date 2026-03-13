@@ -12,45 +12,91 @@ The environment has been prepared to provide a consistent setup across different
 
 ---
 
-# 1. Install Pixi
-
-Skip this step if Pixi is already installed on your system.
-
-Official installation instructions:
-https://pixi.sh/latest/
-
----
-
-## Linux / macOS
-
-Open a terminal and run:
-
-```bash
-curl -fsSL https://pixi.sh/install.sh | bash
-```
-
-## Windows
-
-Download official installer or\
-Open powershell and run
-
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://pixi.sh/install.ps1 | iex"
-```
-
-To allow executing pixi scripts in vscode add an policy exception
-
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-# 2. Download and unpack **xrt**
+# 1. Download and unpack **xrt**
 
 Download the archive with the source code from:
 
 https://github.com/kklmn/xrt/archive/refs/heads/new_glow.zip
 
 Unpack the archive into a location of your choice.
+
+---
+
+# 2. Set up the environment
+
+The project requires Python and several scientific libraries.  
+Two installation options are provided:
+
+- **Pixi (recommended)** – reproducible environment
+- **Conda (alternative)** – manual environment setup
+
+---
+
+## 2.1 Pixi (recommended)
+
+Pixi provides a reproducible environment across Linux, macOS, and Windows.
+
+### Install Pixi
+
+Official installation instructions:
+
+https://pixi.sh/latest/
+
+### Linux / macOS
+
+```bash
+curl -fsSL https://pixi.sh/install.sh | bash
+```
+
+Restart the terminal afterwards.
+
+### Windows (PowerShell)
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://pixi.sh/install.ps1 | iex"
+```
+
+Restart the terminal or VS Code afterwards.
+
+### Verify installation
+
+```bash
+pixi --version
+```
+
+### Install the environment
+
+Open a terminal in the **xrt** folder and run:
+
+```bash
+pixi install -e gui
+```
+
+This installs all required dependencies and prepares the environment.
+
+---
+
+## 2.2 Conda (alternative)
+
+If Pixi is not available, the environment can be created manually using Conda.
+
+Create a new environment:
+
+```bash
+conda create -n xrt311 python=3.11
+```
+
+Activate the environment:
+
+```bash
+conda activate xrt311
+```
+
+Install required packages:
+
+```bash
+conda install numpy scipy matplotlib pyopencl pyopengl freetype-py qtpy pyqt pyqtwebengine
+```
 
 ---
 
@@ -78,6 +124,12 @@ This will install all required dependencies and create the Pixi environment used
 
 The installation may take a few minutes the first time.
 
+To allow executing pixi scripts in vscode on Windows add an policy exception
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
 ---
 
 ## Spyder (WinPython)
@@ -87,3 +139,50 @@ If you are using **Spyder from WinPython**, you can run examples as is without i
 ---
 
 The environment is now ready.
+
+# 4. Calculating synchrotron sources
+
+Navigate to the example folder:
+
+```
+xrt/examples/withRaycing/00_xRayCalculator
+```
+
+---
+
+## Bending magnet example
+
+Open the script:
+
+```
+calc_bm.py
+```
+
+Find the line:
+
+```python
+compareWithLegacyCode = True
+```
+
+Change it to:
+
+```python
+compareWithLegacyCode = False
+```
+
+(This avoids running the legacy implementation and speeds up the example.)
+
+---
+
+## Run the script
+
+Run the script from your IDE or from the terminal.
+
+Example using Pixi:
+
+```bash
+pixi run python calc_bm.py
+```
+
+After running the script, a plot window should appear showing the **bending magnet spectrum**.
+
