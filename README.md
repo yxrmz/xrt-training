@@ -656,7 +656,7 @@ def main():
     plt.plot(energy/1e3, flux_xrt*transm*refl, label='After Silicon Mirror')
     ax = plt.gca()
     ax.set_xlabel(u'energy (keV)')
-    ax.set_ylabel(u'total flux through {0}×{1} µrad² (ph/s/0.1%bw)'.format(
+    ax.set_ylabel(u'total flux through {0}×{1} mrad² (ph/s/0.1%bw)'.format(
         2*xPrimeMax, 2*zPrimeMax))
     plt.legend()
     plt.show()
