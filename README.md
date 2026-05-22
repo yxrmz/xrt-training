@@ -16,8 +16,7 @@ The environment has been prepared to provide a consistent setup across different
 
 Download the archive with the source code from:
 
-https://github.com/kklmn/xrt/archive/refs/heads/new_glow.zip
-
+https://github.com/kklmn/xrt/archive/refs/heads/master.zip
 Unpack the archive into a location of your choice.
 
 ---
