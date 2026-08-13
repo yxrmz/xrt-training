@@ -18,6 +18,16 @@ By the end of this part, you should be able to:
 - open generated CSS Phoebus BOB screens, or follow the live demo if local Phoebus setup needs more time
 - understand how external PV callbacks can update the xrt model in digital twin mode
 
+## Prerequisites
+### pixi
+Use the [installation instructions from Chapter 1](https://github.com/yxrmz/xrt-training/blob/main/chapter1.md#21-pixi-recommended).
+### Phoebus
+Executables for different platforms can be downloaded from the [ESS mirror](https://artifactory.esss.lu.se/ui/native/libs-release-local/se/europeanspallationsource/ics/ess-cs-studio-phoebus/).
+
+JDK is available as a portable archive from [Microsoft Build of OpenJDK](https://learn.microsoft.com/en-ca/java/openjdk/download). JDK 21 is a safe choice for Phoebus 5/6. Make sure you download `*.zip` or `*.tar.gz` file, unless you want to install it system-wide. 
+
+Unpack it into the Phoebus directory. You may need to add the path to `java.exe` in the `phoebus.bat` manually.
+
 ## Note on Screenshots
 
 This chapter intentionally uses only a few visual guides during the live training. You will build the beamline interactively, inspect the scene yourself, and develop your own sense of what the model should look like. Additional screenshots and reference views will be added after the session for future self-guided readers.
